@@ -9,26 +9,24 @@ const router = Router();
 
 // Ruta: /api/usuarios 
 // traer usuarios
-router.get('/', validarJWT, getUsuarios );
+router.get('/',validarJWT, getUsuarios );
 
 // crear usuario
 router.post('/', [
     check('nombre','El usuario es obligatorio').not().isEmpty(),
     check('password', 'La password es obligatoria').not().isEmpty(),
-    check('email', 'El email es obligatorio').not().isEmail(),
+    check('email', 'El email es obligatorio').isEmail(),
     validarCampos
 ], setUsuario);
 
 // actualizar usuario
 router.put('/:id',
-[   validarJWT,
+[
+    validarJWT,
     check('nombre','El usuario es obligatorio').not().isEmpty(),
-    check('role', 'La password es obligatoria').not().isEmpty(),
-    check('email', 'El role es obligatorio').not().isEmail(),
     validarCampos
-
 ],
- actualizarusuario);
+ actualizarUsuario);
 
  // eliminar usuario
  router.delete('/:id', validarJWT, eliminarUsuario);

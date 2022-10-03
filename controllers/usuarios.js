@@ -1,6 +1,6 @@
 const { response } = require("express");
 const bcrypt = require("bcryptjs"); // encriptar clave
-const Usuario = require("../model/usuario");
+const Usuario = require('../models/usuario');
 const { generarJWT } = require("../helpers/jwt");
 
 // listar usuarios
@@ -14,11 +14,11 @@ const getUsuarios = async(req, res) => {
     usuarios
     // uid: req.uid
   });
-};
+}
 
 // crear usuario
 const setUsuario = async (req, res = response) => {
-  const { nombre, password, email } = req.body;
+  const { password, email } = req.body;
 
   try {
     const existeEmail = await Usuario.findOne({ email });
@@ -34,7 +34,7 @@ const setUsuario = async (req, res = response) => {
 
     // encriptar contraseña
     const salt = bcrypt.genSaltSync();
-    usuario.password = bcrypt.hasSync(password, salt);
+    usuario.password = bcrypt.hashSync(password, salt);
 
     // grabar BBDD
     await usuario.save();
@@ -46,15 +46,17 @@ const setUsuario = async (req, res = response) => {
     // routes/usuarios.js
     res.json({
       ok: true,
-      usuario: usuario,
+      usuario,
+      token
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       ok: false,
       msg: "Error chungo, revisar logs",
     });
   }
-};
+}
 
 // actualizar usuario
 const actualizarUsuario = async (req, res = response) => {
@@ -82,7 +84,7 @@ const actualizarUsuario = async (req, res = response) => {
     // si no actualiza el email, tampoco lo grabamos
     if (usuarioDB.email !== email) {
       // debemos ver si existe el nuevo email.
-      const existeEmail = await usuario.findOne({ email });
+      const existeEmail = await Usuario.findOne({ email });
       if (existeEmail) {
         return res.status(400).json({
           ok: false,
@@ -101,7 +103,7 @@ const actualizarUsuario = async (req, res = response) => {
 
     res.status(200).json({
       ok: true,
-      msg: "usuario actualizado",
+      usuario: usuarioActualizado
     });
   } catch (error) {
     console.log(error);
