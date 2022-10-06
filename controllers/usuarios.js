@@ -5,13 +5,35 @@ const { generarJWT } = require("../helpers/jwt");
 
 // listar usuarios
 const getUsuarios = async(req, res) => {
+
+  // metemos un parámetro para paginación. Si no viene es 0
+  const desde = Number(req.query.desde) || 0;
+
   // Esto es el cuerpo de lo que se ejecuta en la petición
   // routes/usuarios.js
-  const usuarios = await Usuario.find({}, "nombre email role google");
+  // const usuarios = await Usuario.find({}, "nombre email role google")
+  //      .skip( desde )
+  //      .limit(5);
+
+  // total de registros
+  // const total = await Usuario.count();
+
+  // para no esperar los dos procesos anteriores, se puede hacer
+  // agrupando tareas
+  // esto devuelve un arreglo con los resultaos de las funciones
+  // Ambas promesas se ejecutan de manera simultánea
+  const [usuarios, total] = await Promise.all([
+    Usuario.find({}, "nombre email role google img")
+    .skip( desde )
+    .limit(5) ,
+    // segunda tarea
+    Usuario.countDocuments()
+  ]);
 
   res.json({
     ok: true,
-    usuarios
+    usuarios,
+    total
     // uid: req.uid
   });
 }
