@@ -39,18 +39,77 @@ const setMedico = async (req, res = response) => {
   }
 };
 
-const actualizarMedico = (req, res = response) => {
-  res.status(200).json({
-    ok: true,
-    msg: "actualizarMedico",
-  });
+const actualizarMedico = async (req, res = response) => {
+  
+  const HospitalId = req.params.hospital;
+  const uid = req.uid; // del usuario
+
+  try {
+    const medico = await Medico.findById(id);
+
+    if (!medico) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El médico no existe",
+      });
+    }
+
+    // esto es si solo fuese un campo
+    // hospital.nombre = req.body.nombre;
+
+    // si hubiesen varios campos
+    const cambiosMedico = {
+      ...req.body,
+      usuario: uid,
+    };
+
+    const medicoActualizado = await Medico.findByIdAndUpdate(
+      id,
+      cambiosMedico,
+      { new: true }
+    ); // para que retorne el último actualizado
+
+    res.json({
+      ok: true,
+      medico: medicoActualizado
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error faltal, contacte con adminsitrador",
+    });
+  }
 };
 
-const eliminarMedico = (req, res = response) => {
-  res.status(200).json({
-    ok: true,
-    msg: "eliminarHospital",
-  });
+const eliminarMedico = async (req, res = response) => {
+
+  const id = req.params.id;
+
+  try {
+    const medico = await Medico.findById(id);
+
+    if (!medico) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El médico no existe",
+      });
+    }
+
+    await Medico.findByIdAndDelete(id);
+
+    res.json({
+      ok: true,
+      msg: "Médico eliminado"
+    });
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error faltal, contacte con adminsitrador",
+    });
+  }
 };
 
 module.exports = { getMedicos, setMedico, actualizarMedico, eliminarMedico };

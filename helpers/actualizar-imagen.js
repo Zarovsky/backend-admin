@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const Usuario = require("../models/usuario");
-const Medico = require("../models/medico");
+const Medico = require("../models/medicos");
 const Hospital = require("../models/hospital");
 
 const borrarImagen = (path) => {
