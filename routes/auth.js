@@ -17,5 +17,4 @@ router.post('/', [
 // regenerar el token si existe
 router.get('/renew', validarJWT, renweToken)
 
-
 module.exports = router;

@@ -12,7 +12,7 @@ const fileUpload = (req, res = response) => {
 
     // validar tipos
     const tiposValidos = ['hospitales', 'usuarios', 'medicos'];
-    if (tiposValidos.includes(tipo))
+    if (!tiposValidos.includes(tipo))
     {
         return res.status(400).json(
             {
@@ -42,7 +42,7 @@ const fileUpload = (req, res = response) => {
 
     // validamos extensión
     const extensionesValidas = ['png','gif','jpg'];
-    if (!extensionesValidas.includes( extension))
+    if (!extensionesValidas.includes( extension.toLowerCase()))
     {
         return res.status(400).json( {
             ok: false,
@@ -87,11 +87,11 @@ const retornarImagen = (req, res = response) => {
     const tipo = req.params.tipo;
     const foto = req.params.foto;
 
-    const pathFile = path.join(__dirname, `../uploads/${ tipo }/${ foto}`);
+    let pathFile = path.join(__dirname, `../uploads/${ tipo }/${ foto}`);
     // si no existe ponemos una por defecto
     if (!fs.existsSync(pathFile))
     {
-        pathFile = path.join(__dirname, `../uploads/no-img.gif`);
+        pathFile = path.join(__dirname, `../uploads/no-image.gif`);
     }
     res.sendFile(pathFile);
     
