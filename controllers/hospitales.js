@@ -4,23 +4,13 @@ const Hospital = require("../models/hospital");
 const getHospitales = async (req, res = response) => {
 
     // metemos un parámetro para paginación. Si no viene es 0
-    const desde = Number(req.query.desde) || 0;
   // esto sería sin paginación
-  // const hospitales = await Hospital.find().populate("usuario", "nombre img");
+   const hospitales = await Hospital.find().populate("usuario", "nombre img");
   // populate es para traer más cosas
-
-  const [hospitales, total] = await Promise.all([
-    Hospital.find.populate("usuario", "nombre img")
-    .skip( desde )
-    .limit(5) ,
-    // segunda tarea
-    Hospital.countDocuments()
-  ]);
 
   res.status(200).json({
     ok: true,
-    hospitales,
-    total
+    hospitales
   });
 };
 

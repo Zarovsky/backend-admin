@@ -12,7 +12,7 @@ const router = Router();
 
 // Ruta: /api/usuarios 
 // traer hospital
-router.get('/', getHospitales );
+router.get('/', validarJWT, getHospitales );
 
 // crear hospitales
 router.post('/', [

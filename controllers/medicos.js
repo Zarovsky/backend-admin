@@ -1,17 +1,35 @@
-
 const { response } = require("express");
 const Medico = require("../models/medicos");
 
 const getMedicos = async (req, res = response) => {
-
   const medicos = await Medico.find()
-                .populate('hospital', 'nombre')
-                .populate('usuario','nombre img');
+    .populate("hospital", "nombre")
+    .populate("usuario", "nombre img");
 
   res.status(200).json({
     ok: true,
-    medicos
+    medicos,
   });
+};
+
+const getMedicoById = async (req, res = response) => {
+  const id = req.params.id;
+
+  try {
+    const medico = await Medico.findById(id)
+      .populate("hospital", "nombre")
+      .populate("usuario", "nombre img");
+
+    res.status(200).json({
+      ok: true,
+      medico,
+    });
+  } catch (error) {
+    res.json({
+      ok: true,
+      msg: "Médico no encontrado",
+    });
+  }
 };
 
 const setMedico = async (req, res = response) => {
@@ -40,7 +58,6 @@ const setMedico = async (req, res = response) => {
 };
 
 const actualizarMedico = async (req, res = response) => {
-  
   const HospitalId = req.params.hospital;
   const uid = req.uid; // del usuario
 
@@ -71,7 +88,7 @@ const actualizarMedico = async (req, res = response) => {
 
     res.json({
       ok: true,
-      medico: medicoActualizado
+      medico: medicoActualizado,
     });
   } catch (error) {
     console.log(error);
@@ -83,7 +100,6 @@ const actualizarMedico = async (req, res = response) => {
 };
 
 const eliminarMedico = async (req, res = response) => {
-
   const id = req.params.id;
 
   try {
@@ -100,9 +116,8 @@ const eliminarMedico = async (req, res = response) => {
 
     res.json({
       ok: true,
-      msg: "Médico eliminado"
+      msg: "Médico eliminado",
     });
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -112,4 +127,4 @@ const eliminarMedico = async (req, res = response) => {
   }
 };
 
-module.exports = { getMedicos, setMedico, actualizarMedico, eliminarMedico };
+module.exports = { getMedicos, setMedico, actualizarMedico, eliminarMedico, getMedicoById };
