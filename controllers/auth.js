@@ -2,6 +2,7 @@ const { response } = require('express');
 const bcrypt = require("bcryptjs"); // encriptar clave
 const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/jwt');
+// const { getMenu } = require('../helpers/menu-frontend');
 
 const login = async( req, res = response ) => {
 
@@ -33,8 +34,10 @@ const login = async( req, res = response ) => {
 
         res.status(200).json({
             ok: true,
-            token
-        })
+            token,
+            // retornamos el menú
+            // menu: getMenu (usuarioDB.role)
+        });
 
     } catch (error) {
         console.log(error);
@@ -56,8 +59,10 @@ const renweToken = async (req, res = response) => {
     res.status(200).json({
         ok: true,
         token,
-        usuario
-    })
+        usuario,
+        // retornamos el menú
+        // menu: getMenu (usuario.role)
+    });
 }
 
 module.exports = { login, renweToken }
