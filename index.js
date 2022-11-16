@@ -3,6 +3,8 @@ require('dotenv').config();
 const { dbConnection } = require('./db/config');
 // CORS
 const cors = require('cors');
+// para crear la ruta, viene de node
+const path = required('path');
 
 
 // crear o inicializa el servidor de express
@@ -42,7 +44,10 @@ app.use('/api/login', require('./routes/auth'));
 app.use('/api/buscar', require('./routes/busquedas'));
 app.use('/api/upload', require('./routes/uploads'));
 
-
+// si no es ninguna de esas rutas
+app.get('*',(req, res) => {
+    res.sendFile( path.resolve(__dirname, 'public/index.html'));
+});
 
 
 // para levantarlo
